@@ -5,7 +5,6 @@ import 'package:driveme/backend/backend_data.dart';
 import 'package:driveme/list/model.dart';
 
 class ListBloc {
-
   static final ListBloc _singleton = new ListBloc._internal();
 
   factory ListBloc() {
@@ -16,7 +15,8 @@ class ListBloc {
 
   ItemsDataProvider provider = BackendData();
 
-  BehaviorSubject<ListOfItems> _itemsController = BehaviorSubject<ListOfItems>();
+  BehaviorSubject<ListOfItems> _itemsController =
+      BehaviorSubject<ListOfItems>();
   Stream<ListOfItems> get outItems => _itemsController.stream;
 
   Future loadItems() async {
@@ -35,9 +35,10 @@ class ListBloc {
     StreamSubscription subscription;
     subscription = ListBloc().outItems.listen((listOfItems) async {
       List<Item> newList = List<Item>();
-      for (var item in listOfItems.items){
+      for (var item in listOfItems.items) {
         if (item.id == id) {
-          newList.add(Item(item.id, item.title, item.url, item.description, true));
+          newList.add(Item(item.id, item.title, item.description, item.url,
+              true, item.features));
         } else {
           newList.add(item);
         }
@@ -51,9 +52,10 @@ class ListBloc {
     StreamSubscription subscription;
     subscription = ListBloc().outItems.listen((listOfItems) async {
       List<Item> newList = List<Item>();
-      for (var item in listOfItems.items){
+      for (var item in listOfItems.items) {
         if (item.id == id) {
-          newList.add(Item(item.id, item.title, item.url, item.description, false));
+          newList.add(Item(item.id, item.title, item.description, item.url,
+              false, item.features));
         } else {
           newList.add(item);
         }
@@ -75,4 +77,3 @@ class ListBloc {
 abstract class ItemsDataProvider {
   Future<ListOfItems> loadItems();
 }
-

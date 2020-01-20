@@ -16,9 +16,9 @@ class TestDataProvider implements ItemsDataProvider {
   @override
   Future<ListOfItems> loadItems() {
     List<Item> list = List<Item>();
-    list.add(Item(ITEM_ID_ALPHA_2, ITEM_TITLE_ALPHA_2, "URL", "", ITEM_SELECTED_TRUE_ALPHA_2));
-    list.add(Item(ITEM_ID_ALPHA_1, ITEM_TITLE_ALPHA_1, "URL", "", ITEM_SELECTED_FALSE_ALPHA_1));
-    list.add(Item(ITEM_ID_ALPHA_3, ITEM_TITLE_ALPHA_3, "URL", "", ITEM_SELECTED_FALSE_ALPHA_3));
+    list.add(Item(ITEM_ID_ALPHA_2, ITEM_TITLE_ALPHA_2, "URL", "", ITEM_SELECTED_TRUE_ALPHA_2, []));
+    list.add(Item(ITEM_ID_ALPHA_1, ITEM_TITLE_ALPHA_1, "URL", "", ITEM_SELECTED_FALSE_ALPHA_1, []));
+    list.add(Item(ITEM_ID_ALPHA_3, ITEM_TITLE_ALPHA_3, "URL", "", ITEM_SELECTED_FALSE_ALPHA_3, []));
     return Future.value(ListOfItems(list, null));
   }
 

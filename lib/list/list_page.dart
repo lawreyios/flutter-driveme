@@ -56,23 +56,44 @@ class _ListPageState extends State<ListPage> {
   Widget _buildListRow(Item item) {
     return Container(
         color: item.selected ? Colors.green.shade200 : Colors.white,
-        child: ListTile(
-          title: Row(
-            children: <Widget>[
-              Image.network(item.url),
-              Text(
-                item.title,
-                style: TextStyle(fontWeight: FontWeight.bold),
+        child: Card(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(8.0))),
+          child: ListTile(
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                ClipRRect(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(8.0),
+                    ),
+                    child:
+                        Image.network(item.url, height: 150, fit: BoxFit.cover)),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    item.title,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+                  ),
+                ),
+              ],
+            ),
+            subtitle: Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: Text(
+                "\$100/day",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18.0,
+                ),
               ),
-            ],
+            ),
+            onTap: () {
+              _displayDetails(item);
+            },
           ),
-          subtitle: Text(
-            "\$100/day",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0,),
-          ),
-          onTap: () {
-            _displayDetails(item);
-          },
         ));
   }
 

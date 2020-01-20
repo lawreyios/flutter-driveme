@@ -3,12 +3,6 @@ import 'package:rxdart/rxdart.dart';
 import 'package:driveme/list/model.dart';
 import 'package:driveme/list/list_bloc.dart';
 
-///
-/// Due to the UI of the app, there is only one DetailsPage at any time. Therefore,
-/// we can use a singleton Bloc. If there could be several instances of DetailsPage
-/// in the widget tree at a given time, we would need to add the item id as a
-/// parameter to the Bloc class.
-///
 class DetailsBloc {
 
   static final DetailsBloc _singleton = new DetailsBloc._internal();
