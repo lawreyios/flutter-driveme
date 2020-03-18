@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:rxdart/rxdart.dart';
-import 'package:driveme/list/model.dart';
+import 'package:driveme/models/car.dart';
 import 'package:driveme/list/list_bloc.dart';
 
 class DetailsBloc {
@@ -13,8 +13,8 @@ class DetailsBloc {
 
   DetailsBloc._internal();
 
-  BehaviorSubject<Item> _itemController = BehaviorSubject<Item>();
-  Stream<Item> get outItem => _itemController.stream;
+  BehaviorSubject<Car> _itemController = BehaviorSubject<Car>();
+  Stream<Car> get outItem => _itemController.stream;
   StreamSubscription _subscription;
   int _currentId;
 

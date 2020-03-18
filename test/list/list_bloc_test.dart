@@ -1,19 +1,22 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:driveme/list/model.dart';
+import 'package:driveme/models/car.dart';
 import 'package:driveme/list/list_bloc.dart';
 
-import '../backend/test_data_provider.dart';
+import '../database/test_data_provider.dart';
 
 void main() {
-  test('Items are alphabetised, ignoring case', () async {
+  test('Cars are sorted in alphabetical order', () async {
     final listBloc = ListBloc();
     listBloc.injectDataProviderForTest(TestDataProvider());
-
     listBloc.loadItems();
 
-    var events = await listBloc.outItems.take(1).toList();
+    CarsList cars = await TestDataProvider().loadCars();
+    print(cars.items);
 
-    verifyTestData(events[0]);
+    var carsList = await listBloc.outItems.take(cars.items.length).toList();
+    print(carsList);
+
+    // verifyTestData(carsList[0]);
   });
 
   test('Selecting an unselected item updates the stream', () async {
@@ -21,17 +24,16 @@ void main() {
     listBloc.injectDataProviderForTest(TestDataProvider());
 
     await listBloc.loadItems();
-    listBloc.selectItem(ITEM_ID_ALPHA_1);
+    listBloc.selectItem(1);
 
-    var events = await listBloc.outItems.take(2).toList();
+    var cars = await listBloc.outItems.take(2).toList();
 
-    verifyTestData(events[0]);
+    verifyTestData(cars[0]);
 
-    verifyTestDataExceptSelected(events[1]);
-    verifySelectedStatus(events[1].items.elementAt(0), true);
-    verifySelectedStatus(events[1].items.elementAt(1), ITEM_SELECTED_TRUE_ALPHA_2);
-    verifySelectedStatus(events[1].items.elementAt(2), ITEM_SELECTED_FALSE_ALPHA_3);
-
+    verifyTestDataExceptSelected(cars[1]);
+    verifySelectedStatus(cars[1].items.elementAt(0), true);
+    verifySelectedStatus(cars[1].items.elementAt(1), true);
+    verifySelectedStatus(cars[1].items.elementAt(2), false);
   });
 
   test('Selecting a selected item updates the stream', () async {
@@ -39,16 +41,15 @@ void main() {
     listBloc.injectDataProviderForTest(TestDataProvider());
 
     await listBloc.loadItems();
-    listBloc.selectItem(ITEM_ID_ALPHA_2);
+    listBloc.selectItem(2);
 
     var events = await listBloc.outItems.take(2).toList();
 
     verifyTestData(events[0]);
     verifyTestDataExceptSelected(events[1]);
-    verifySelectedStatus(events[1].items.elementAt(0), ITEM_SELECTED_FALSE_ALPHA_1);
+    verifySelectedStatus(events[1].items.elementAt(0), false);
     verifySelectedStatus(events[1].items.elementAt(1), true);
-    verifySelectedStatus(events[1].items.elementAt(2), ITEM_SELECTED_FALSE_ALPHA_3);
-
+    verifySelectedStatus(events[1].items.elementAt(2), false);
   });
 
   test('Unselecting a selected item updates the stream', () async {
@@ -56,16 +57,15 @@ void main() {
     listBloc.injectDataProviderForTest(TestDataProvider());
 
     await listBloc.loadItems();
-    listBloc.deSelectItem(ITEM_ID_ALPHA_2);
+    listBloc.deselectItem(2);
 
     var events = await listBloc.outItems.take(2).toList();
 
     verifyTestData(events[0]);
     verifyTestDataExceptSelected(events[1]);
-    verifySelectedStatus(events[1].items.elementAt(0), ITEM_SELECTED_FALSE_ALPHA_1);
+    verifySelectedStatus(events[1].items.elementAt(0), false);
     verifySelectedStatus(events[1].items.elementAt(1), false);
-    verifySelectedStatus(events[1].items.elementAt(2), ITEM_SELECTED_FALSE_ALPHA_3);
-
+    verifySelectedStatus(events[1].items.elementAt(2), false);
   });
 
   test('Unselecting an unselected item updates the stream', () async {
@@ -73,38 +73,33 @@ void main() {
     listBloc.injectDataProviderForTest(TestDataProvider());
 
     await listBloc.loadItems();
-    listBloc.deSelectItem(ITEM_ID_ALPHA_1);
+    listBloc.deselectItem(1);
 
     var events = await listBloc.outItems.take(2).toList();
 
     verifyTestData(events[0]);
     verifyTestDataExceptSelected(events[1]);
     verifySelectedStatus(events[1].items.elementAt(0), false);
-    verifySelectedStatus(events[1].items.elementAt(1), ITEM_SELECTED_TRUE_ALPHA_2);
-    verifySelectedStatus(events[1].items.elementAt(2), ITEM_SELECTED_FALSE_ALPHA_3);
-
+    verifySelectedStatus(events[1].items.elementAt(1), true);
+    verifySelectedStatus(events[1].items.elementAt(2), false);
   });
-
 }
 
-void verifyTestData(ListOfItems data) {
-  verifyTestDataExceptSelected(data);
-  verifySelectedStatus(data.items.elementAt(0), ITEM_SELECTED_FALSE_ALPHA_1);
-  verifySelectedStatus(data.items.elementAt(1), ITEM_SELECTED_TRUE_ALPHA_2);
-  verifySelectedStatus(data.items.elementAt(2), ITEM_SELECTED_FALSE_ALPHA_3);
+void verifyTestData(CarsList data) {
+  verifySelectedStatus(data.items.first, false);
 }
 
-void verifyTestDataExceptSelected(ListOfItems data) {
+void verifyTestDataExceptSelected(CarsList data) {
   expect(data.errorMessage, isNull);
-  expect(data.items.length, equals(3));
-  expect(data.items.elementAt(0).title, equals(ITEM_TITLE_ALPHA_1));
-  expect(data.items.elementAt(1).title, equals(ITEM_TITLE_ALPHA_2));
-  expect(data.items.elementAt(2).title, equals(ITEM_TITLE_ALPHA_3));
-  expect(data.items.elementAt(0).id, equals(ITEM_ID_ALPHA_1));
-  expect(data.items.elementAt(1).id, equals(ITEM_ID_ALPHA_2));
-  expect(data.items.elementAt(2).id, equals(ITEM_ID_ALPHA_3));
+  expect(data.items.length, equals(6));
+  expect(data.items.elementAt(0).title, equals("Toyota Yaris 2013"));
+  expect(data.items.elementAt(1).title, equals("Mercedes-Benz 2017"));
+  expect(data.items.elementAt(2).title, equals("Hyundai Sonata 2017"));
+  expect(data.items.elementAt(0).id, equals(1));
+  expect(data.items.elementAt(1).id, equals(2));
+  expect(data.items.elementAt(2).id, equals(3));
 }
 
-void verifySelectedStatus(Item data, bool shouldBeSelected) {
+void verifySelectedStatus(Car data, bool shouldBeSelected) {
   expect(data.selected, equals(shouldBeSelected));
 }

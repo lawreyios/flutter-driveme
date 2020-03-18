@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:rxdart/rxdart.dart';
-import 'package:driveme/backend/backend_data.dart';
-import 'package:driveme/list/model.dart';
+import 'package:driveme/database/car_database.dart';
+import 'package:driveme/models/car.dart';
 
 class ListBloc {
   static final ListBloc _singleton = new ListBloc._internal();
@@ -13,54 +13,53 @@ class ListBloc {
 
   ListBloc._internal();
 
-  ItemsDataProvider provider = BackendData();
+  CarsDataProvider provider = CarDatabase();
 
-  BehaviorSubject<ListOfItems> _itemsController =
-      BehaviorSubject<ListOfItems>();
-  Stream<ListOfItems> get outItems => _itemsController.stream;
+  BehaviorSubject<CarsList> _itemsController = BehaviorSubject<CarsList>();
+  Stream<CarsList> get outItems => _itemsController.stream;
 
   Future loadItems() async {
-    ListOfItems items = await provider.loadItems();
+    CarsList items = await provider.loadCars();
     if (items.items != null) {
-      items.items.sort(_alphabetiseItemsByTitleIgnoreCases);
+      items.items.sort(alphabetiseItemsByTitleIgnoreCases);
     }
     _itemsController.sink.add(items);
   }
 
-  int _alphabetiseItemsByTitleIgnoreCases(Item a, Item b) {
+  int alphabetiseItemsByTitleIgnoreCases(Car a, Car b) {
     return a.title.toLowerCase().compareTo(b.title.toLowerCase());
   }
 
   void selectItem(int id) {
     StreamSubscription subscription;
     subscription = ListBloc().outItems.listen((listOfItems) async {
-      List<Item> newList = List<Item>();
+      List<Car> newList = List<Car>();
       for (var item in listOfItems.items) {
         if (item.id == id) {
-          newList.add(Item(item.id, item.title, item.description, item.url,
-              true, item.features));
+          newList.add(Car(item.id, item.title, item.description, item.url,
+              item.pricePerDay, true, item.features));
         } else {
           newList.add(item);
         }
       }
-      _itemsController.sink.add(ListOfItems(newList, null));
+      _itemsController.sink.add(CarsList(newList, null));
       subscription.cancel();
     });
   }
 
-  void deSelectItem(int id) {
+  void deselectItem(int id) {
     StreamSubscription subscription;
     subscription = ListBloc().outItems.listen((listOfItems) async {
-      List<Item> newList = List<Item>();
+      List<Car> newList = List<Car>();
       for (var item in listOfItems.items) {
         if (item.id == id) {
-          newList.add(Item(item.id, item.title, item.description, item.url,
-              false, item.features));
+          newList.add(Car(item.id, item.title, item.description, item.url,
+              item.pricePerDay, false, item.features));
         } else {
           newList.add(item);
         }
       }
-      _itemsController.sink.add(ListOfItems(newList, null));
+      _itemsController.sink.add(CarsList(newList, null));
       subscription.cancel();
     });
   }
@@ -69,11 +68,11 @@ class ListBloc {
     _itemsController.close();
   }
 
-  void injectDataProviderForTest(ItemsDataProvider provider) {
+  void injectDataProviderForTest(CarsDataProvider provider) {
     this.provider = provider;
   }
 }
 
-abstract class ItemsDataProvider {
-  Future<ListOfItems> loadItems();
+abstract class CarsDataProvider {
+  Future<CarsList> loadCars();
 }

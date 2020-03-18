@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:driveme/details/details_page.dart';
-import 'package:driveme/list/model.dart';
+import 'package:driveme/models/car.dart';
 import 'package:driveme/list/list_bloc.dart';
 import 'package:driveme/strings.dart';
 
@@ -24,10 +24,10 @@ class _ListPageState extends State<ListPage> {
         appBar: AppBar(
           title: Text(LIST_PAGE_TITLE),
         ),
-        body: StreamBuilder<ListOfItems>(
+        body: StreamBuilder<CarsList>(
           stream: ListBloc().outItems,
           initialData: null,
-          builder: (BuildContext context, AsyncSnapshot<ListOfItems> snapshot) {
+          builder: (BuildContext context, AsyncSnapshot<CarsList> snapshot) {
             if (snapshot.hasError) {
               return _displayErrorMessage(snapshot.error.toString());
             } else if (snapshot.data == null) {
@@ -38,7 +38,8 @@ class _ListPageState extends State<ListPage> {
               return ListView(
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
-                children: snapshot.data.items.map((Item value) {
+                key: Key('car_list'),
+                children: snapshot.data.items.map((Car value) {
                   return _buildListRow(value);
                 }).toList(),
               );
@@ -53,7 +54,7 @@ class _ListPageState extends State<ListPage> {
         child: Center(child: Text('Error: $errorMessage')));
   }
 
-  Widget _buildListRow(Item item) {
+  Widget _buildListRow(Car item) {
     return Container(
         color: item.selected ? Colors.green.shade200 : Colors.white,
         child: Card(
@@ -67,14 +68,18 @@ class _ListPageState extends State<ListPage> {
                     borderRadius: BorderRadius.all(
                       Radius.circular(8.0),
                     ),
-                    child:
-                        Image.network(item.url, height: 150, fit: BoxFit.cover)),
+                    child: (item.url == null || item.url.isEmpty)
+                        ? Image.asset('assets/placeholder.png',
+                            height: 150, fit: BoxFit.cover)
+                        : Image.network(item.url,
+                            height: 150, fit: BoxFit.cover)),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
                     item.title,
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
                   ),
                 ),
               ],
@@ -82,7 +87,7 @@ class _ListPageState extends State<ListPage> {
             subtitle: Padding(
               padding: const EdgeInsets.all(4.0),
               child: Text(
-                "\$100/day",
+                "${item.pricePerDay}/day",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
@@ -97,7 +102,7 @@ class _ListPageState extends State<ListPage> {
         ));
   }
 
-  void _displayDetails(Item item) async {
+  void _displayDetails(Car item) async {
     await Navigator.of(context).push(new MaterialPageRoute<Null>(
       builder: (BuildContext context) {
         return DetailsPage(id: item.id);
