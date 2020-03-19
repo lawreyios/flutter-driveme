@@ -1,3 +1,4 @@
+import 'package:driveme/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:driveme/details/details_bloc.dart';
 import 'package:driveme/list/list_bloc.dart';
@@ -17,7 +18,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Drive Me',
+      title: APP_NAME,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,

@@ -16,10 +16,10 @@ class ListBloc {
   CarsDataProvider provider = CarDatabase();
 
   BehaviorSubject<CarsList> _itemsController = BehaviorSubject<CarsList>();
-  Stream<CarsList> get outItems => _itemsController.stream;
+  Stream<CarsList> get outCars => _itemsController.stream;
 
   Future loadItems() async {
-    CarsList items = await provider.loadCars();
+    CarsList items = await provider.loadCars();    
     if (items.items != null) {
       items.items.sort(alphabetiseItemsByTitleIgnoreCases);
     }
@@ -32,9 +32,9 @@ class ListBloc {
 
   void selectItem(int id) {
     StreamSubscription subscription;
-    subscription = ListBloc().outItems.listen((listOfItems) async {
+    subscription = ListBloc().outCars.listen((listOfCars) async {
       List<Car> newList = List<Car>();
-      for (var item in listOfItems.items) {
+      for (var item in listOfCars.items) {
         if (item.id == id) {
           newList.add(Car(item.id, item.title, item.description, item.url,
               item.pricePerDay, true, item.features));
@@ -49,7 +49,7 @@ class ListBloc {
 
   void deselectItem(int id) {
     StreamSubscription subscription;
-    subscription = ListBloc().outItems.listen((listOfItems) async {
+    subscription = ListBloc().outCars.listen((listOfItems) async {
       List<Car> newList = List<Car>();
       for (var item in listOfItems.items) {
         if (item.id == id) {

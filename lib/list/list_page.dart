@@ -25,7 +25,7 @@ class _ListPageState extends State<ListPage> {
           title: Text(LIST_PAGE_TITLE),
         ),
         body: StreamBuilder<CarsList>(
-          stream: ListBloc().outItems,
+          stream: ListBloc().outCars,
           initialData: null,
           builder: (BuildContext context, AsyncSnapshot<CarsList> snapshot) {
             if (snapshot.hasError) {
@@ -35,13 +35,16 @@ class _ListPageState extends State<ListPage> {
             } else if (snapshot.data.errorMessage != null) {
               return _displayErrorMessage(snapshot.data.errorMessage);
             } else {
-              return ListView(
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                key: Key('car_list'),
-                children: snapshot.data.items.map((Car value) {
-                  return _buildListRow(value);
-                }).toList(),
+              return SingleChildScrollView(
+                child: ListView(
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  key: Key('car_list'),
+                  children: snapshot.data.items.map((Car value) {
+                    return _buildListRow(value);
+                  }).toList(),
+                ),
               );
             }
           },

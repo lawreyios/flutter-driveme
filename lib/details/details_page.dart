@@ -40,7 +40,7 @@ class _DetailsPageState extends State<DetailsPage> {
         key: Key("car_details"),
         stream: DetailsBloc().outItem,
         initialData: null,
-        builder: (BuildContext context, AsyncSnapshot<Car> snapshot) {
+        builder: (BuildContext context, AsyncSnapshot<Car> snapshot) {          
           if (snapshot.data == null) {
             return Center(child: CircularProgressIndicator());
           } else {

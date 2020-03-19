@@ -4,7 +4,7 @@ class Car {
   final String description;
   final String url;
   final double pricePerDay;
-  final bool selected;
+  bool selected;
   final List<dynamic> features;
 
   Car(this.id, this.title, this.description, this.url, this.pricePerDay,

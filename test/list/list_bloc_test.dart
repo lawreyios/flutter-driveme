@@ -1,105 +1,84 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:driveme/models/car.dart';
 import 'package:driveme/list/list_bloc.dart';
-
 import '../database/test_data_provider.dart';
 
 void main() {
-  test('Cars are sorted in alphabetical order', () async {
+  TestWidgetsFlutterBinding.ensureInitialized();
+  test('List of Cars is well sorted in alphabectical order', () async {
     final listBloc = ListBloc();
     listBloc.injectDataProviderForTest(TestDataProvider());
     listBloc.loadItems();
 
-    CarsList cars = await TestDataProvider().loadCars();
-    print(cars.items);
+    var carsListData = await listBloc.outCars.take(1).toList();
+    var carsList = carsListData.first.items;
 
-    var carsList = await listBloc.outItems.take(cars.items.length).toList();
-    print(carsList);
+    CarsList databaseCarsData = await TestDataProvider().loadCars();
+    databaseCarsData.items.sort(ListBloc().alphabetiseItemsByTitleIgnoreCases);
 
-    // verifyTestData(carsList[0]);
+    for (var i = 0; i < carsList.length; i++) {
+      final actualTitle = carsList.elementAt(i).title;
+      final expectedTitle = databaseCarsData.items[i].title;
+      expect(actualTitle, equals(expectedTitle));
+
+      final actualDescription = carsList.elementAt(i).description;
+      final expectedDescription = databaseCarsData.items[i].description;
+      expect(actualDescription, equals(expectedDescription));
+
+      final actualPricePerDay = carsList.elementAt(i).pricePerDay;
+      final expectedPricePerDay = databaseCarsData.items[i].pricePerDay;
+      expect(actualPricePerDay, equals(expectedPricePerDay));
+
+      final actualSelection = carsList.elementAt(i).selected;
+      final expectedSelection = i == 5 ? true : false;    
+      expect(actualSelection, expectedSelection);
+
+      final actualFeatures = carsList.elementAt(i).features;
+      final expectedFeatures = databaseCarsData.items[i].features;
+
+      expect(listEquals(actualFeatures, expectedFeatures), true);
+    }
   });
 
-  test('Selecting an unselected item updates the stream', () async {
+  test('Stream is updated when a Car is Selected', () async {
     final listBloc = ListBloc();
     listBloc.injectDataProviderForTest(TestDataProvider());
-
     await listBloc.loadItems();
-    listBloc.selectItem(1);
 
-    var cars = await listBloc.outItems.take(2).toList();
-
-    verifyTestData(cars[0]);
-
-    verifyTestDataExceptSelected(cars[1]);
-    verifySelectedStatus(cars[1].items.elementAt(0), true);
-    verifySelectedStatus(cars[1].items.elementAt(1), true);
-    verifySelectedStatus(cars[1].items.elementAt(2), false);
-  });
-
-  test('Selecting a selected item updates the stream', () async {
-    final listBloc = ListBloc();
-    listBloc.injectDataProviderForTest(TestDataProvider());
-
-    await listBloc.loadItems();
     listBloc.selectItem(2);
 
-    var events = await listBloc.outItems.take(2).toList();
+    var carsListData = await listBloc.outCars.take(2).toList();
+    var carsList = carsListData.last.items;
 
-    verifyTestData(events[0]);
-    verifyTestDataExceptSelected(events[1]);
-    verifySelectedStatus(events[1].items.elementAt(0), false);
-    verifySelectedStatus(events[1].items.elementAt(1), true);
-    verifySelectedStatus(events[1].items.elementAt(2), false);
+    expect(carsList.elementAt(0).selected, false);
+    expect(carsList.elementAt(1).selected, true);
+    expect(carsList.elementAt(2).selected, false);
+    expect(carsList.elementAt(3).selected, false);
+    expect(carsList.elementAt(4).selected, false);
+    expect(carsList.elementAt(5).selected, true);
   });
 
-  test('Unselecting a selected item updates the stream', () async {
+  test('Stream is updated when a Car is Deselected', () async {
     final listBloc = ListBloc();
     listBloc.injectDataProviderForTest(TestDataProvider());
-
     await listBloc.loadItems();
+
+    listBloc.selectItem(2);
+
+    var carsListData = await listBloc.outCars.take(2).toList();
+    var carsList = carsListData.last.items;
+
     listBloc.deselectItem(2);
+    
+    carsListData = await listBloc.outCars.take(2).toList();
+    carsList = carsListData.last.items;
 
-    var events = await listBloc.outItems.take(2).toList();
-
-    verifyTestData(events[0]);
-    verifyTestDataExceptSelected(events[1]);
-    verifySelectedStatus(events[1].items.elementAt(0), false);
-    verifySelectedStatus(events[1].items.elementAt(1), false);
-    verifySelectedStatus(events[1].items.elementAt(2), false);
+    expect(carsList.elementAt(0).selected, false);
+    expect(carsList.elementAt(1).selected, false);
+    expect(carsList.elementAt(2).selected, false);
+    expect(carsList.elementAt(3).selected, false);
+    expect(carsList.elementAt(4).selected, false);
+    expect(carsList.elementAt(5).selected, true);
   });
-
-  test('Unselecting an unselected item updates the stream', () async {
-    final listBloc = ListBloc();
-    listBloc.injectDataProviderForTest(TestDataProvider());
-
-    await listBloc.loadItems();
-    listBloc.deselectItem(1);
-
-    var events = await listBloc.outItems.take(2).toList();
-
-    verifyTestData(events[0]);
-    verifyTestDataExceptSelected(events[1]);
-    verifySelectedStatus(events[1].items.elementAt(0), false);
-    verifySelectedStatus(events[1].items.elementAt(1), true);
-    verifySelectedStatus(events[1].items.elementAt(2), false);
-  });
-}
-
-void verifyTestData(CarsList data) {
-  verifySelectedStatus(data.items.first, false);
-}
-
-void verifyTestDataExceptSelected(CarsList data) {
-  expect(data.errorMessage, isNull);
-  expect(data.items.length, equals(6));
-  expect(data.items.elementAt(0).title, equals("Toyota Yaris 2013"));
-  expect(data.items.elementAt(1).title, equals("Mercedes-Benz 2017"));
-  expect(data.items.elementAt(2).title, equals("Hyundai Sonata 2017"));
-  expect(data.items.elementAt(0).id, equals(1));
-  expect(data.items.elementAt(1).id, equals(2));
-  expect(data.items.elementAt(2).id, equals(3));
-}
-
-void verifySelectedStatus(Car data, bool shouldBeSelected) {
-  expect(data.selected, equals(shouldBeSelected));
 }

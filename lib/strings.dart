@@ -1,3 +1,4 @@
+const String APP_NAME = "Drive Me";
 const String SELECT_BUTTON = "SELECT";
 const String REMOVE_BUTTON = "DESELECT";
 const String SELECTED_TITLE = "SELECTED";

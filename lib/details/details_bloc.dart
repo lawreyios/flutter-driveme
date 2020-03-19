@@ -19,7 +19,6 @@ class DetailsBloc {
   int _currentId;
 
   void getItem(int id) async {
-    // Reset the item
     _itemController.sink.add(null);
 
     _currentId = id;
@@ -27,7 +26,7 @@ class DetailsBloc {
       _subscription.cancel();
     }
 
-    _subscription = ListBloc().outItems.listen((listOfItems) async {
+    _subscription = ListBloc().outCars.listen((listOfItems) async {
       for (var item in listOfItems.items){
         if (item.id == _currentId) {
           _itemController.sink.add(item);

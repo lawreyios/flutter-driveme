@@ -3,17 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:driveme/details/details_page.dart';
 import 'package:driveme/list/list_bloc.dart';
-import 'package:driveme/strings.dart';
 
 import '../database/test_data_provider.dart';
 
 CarsList cars;
 
 void main() {
-  testWidgets('Selected car is shown as selected', (WidgetTester tester) async {
+  testWidgets('Unselected Car Details Page should be shown as Unselected',
+      (WidgetTester tester) async {
     ListBloc().injectDataProviderForTest(TestDataProvider());
+    await ListBloc().loadItems();
 
-    cars = await TestDataProvider().loadCars();
+    CarsList cars = await TestDataProvider().loadCars();
     cars.items.sort(ListBloc().alphabetiseItemsByTitleIgnoreCases);
 
     await tester.pumpWidget(DetailsPageSelectedWrapper(cars.items.first.id));
@@ -22,107 +23,110 @@ void main() {
     final carDetailsKey = find.byKey(Key("car_details"));
     expect(carDetailsKey, findsOneWidget);
 
-    for (var i in tester.allElements.toList()) {
-      print(i.toString());
-    }
-
-    // final selectButtonFinder = find.widgetWithText(Text, "Features");
-    // await tester.ensureVisible(selectButtonFinder);
-    // expect(selectButtonFinder, findsOneWidget);
-
-    // final selectionTitleFinder = find.text("Features");
-    // final pageTitleFinder = _getTitleFinder(cars.items.first.title);
-
-    // expect(selectionTitleFinder, findsOneWidget);
-    // expect(pageTitleFinder, findsOneWidget);
-  });
-
-  testWidgets('Unselected item is shown as unselected',
-      (WidgetTester tester) async {
-    // Inject data provider
-    ListBloc().injectDataProviderForTest(TestDataProvider());
-    await ListBloc().loadItems();
-
-    // Build widget
-    await tester.pumpWidget(DetailsPageUnselectedWrapper());
-
-    // This causes the stream builder to get the data
-    await tester.pump(Duration.zero);
-
-    final titleFinder = _getTitleFinder("Mercedes-Benz 2017");
-    final buttonFinder = _getSelectButtonFinder();
-
-    expect(titleFinder, findsNWidgets(2));
-    expect(buttonFinder, findsOneWidget);
-  });
-
-  testWidgets('Select unselected item updates widget and stream',
-      (WidgetTester tester) async {
-    // Inject data provider
-    ListBloc().injectDataProviderForTest(TestDataProvider());
-    await ListBloc().loadItems();
-
-    // Build widget
-    await tester.pumpWidget(DetailsPageUnselectedWrapper());
-
-    // This causes the stream builder to get the data
-    await tester.pump(Duration.zero);
-
-    final buttonFinder = _getSelectButtonFinder();
-    await tester.tap(buttonFinder);
-
-    // Trigger widget to redraw its frames, this causes the stream builder to get the new data
-    await tester.pump(Duration.zero);
-
-    final titleFinder = _getSelectedTitleFinder("Mercedes-Benz 2017");
-    final pageTitleFinder = _getTitleFinder("Mercedes-Benz 2017");
-    final buttonFinder2 = _getRemoveButtonFinder();
-
-    expect(titleFinder, findsOneWidget);
+    final pageTitleFinder = find.text(cars.items.first.title);
     expect(pageTitleFinder, findsOneWidget);
-    expect(buttonFinder2, findsOneWidget);
+
+    final notSelectedTextFinder = find.text("NOT SELECTED");
+    expect(notSelectedTextFinder, findsOneWidget);
+
+    final descriptionTextFinder = find.text(cars.items.first.description);
+    expect(descriptionTextFinder, findsOneWidget);
+
+    final featuresTitleTextFinder = find.text("Features");
+    expect(featuresTitleTextFinder, findsOneWidget);
+
+    var allFeatures = StringBuffer();
+    cars.items.first.features.forEach((feature) {
+      allFeatures.write('\n' + feature + '\n');
+    });
+
+    final featureTextFinder = find.text(allFeatures.toString());
+    await tester.ensureVisible(featureTextFinder);
+    expect(featureTextFinder, findsOneWidget);
+
+    final selectButtonFinder = find.text("SELECT");
+    await tester.ensureVisible(selectButtonFinder);
+    expect(selectButtonFinder, findsOneWidget);
+
+    print("A");
   });
 
-  testWidgets('Unselect selected item updates widget and stream',
+  testWidgets('Selected Car Details Page should be shown as Selected',
       (WidgetTester tester) async {
-    // Inject data provider
-    ListBloc().injectDataProviderForTest(TestDataProvider());
+    ListBloc().injectDataProviderForTest(TestNewDataProvider());
+    await ListBloc().loadItems();    
+
+    await tester.pumpWidget(DetailsPageSelectedWrapper(3));
+
+    await tester.pump(Duration.zero);
+
+    final carDetailsKey = find.byKey(Key("car_details"));
+    expect(carDetailsKey, findsOneWidget);
+
+    final pageTitleFinder = find.text("Car 3");
+    expect(pageTitleFinder, findsOneWidget);
+
+    final notSelectedTextFinder = find.text("SELECTED");
+    expect(notSelectedTextFinder, findsOneWidget);
+
+    final descriptionTextFinder = find.text("description");
+    expect(descriptionTextFinder, findsOneWidget);
+
+    final featuresTitleTextFinder = find.text("Features");
+    expect(featuresTitleTextFinder, findsOneWidget);
+
+    final selectButtonFinder = find.text("DESELECT");
+    await tester.ensureVisible(selectButtonFinder);
+    expect(selectButtonFinder, findsOneWidget);
+  });
+
+  testWidgets('Selecting Car Updates the Widget', (WidgetTester tester) async {
+    ListBloc().injectDataProviderForTest(TestNewDataProvider());
     await ListBloc().loadItems();
 
-    // Build widget
+    CarsList cars = await TestNewDataProvider().loadCars();
+    cars.items.sort(ListBloc().alphabetiseItemsByTitleIgnoreCases);
+
     await tester.pumpWidget(DetailsPageSelectedWrapper(cars.items.first.id));
-
-    // This causes the stream builder to get the data
     await tester.pump(Duration.zero);
 
-    final buttonFinder = _getRemoveButtonFinder();
-    await tester.tap(buttonFinder);
+    final selectButtonFinder = find.text("SELECT");
+    await tester.ensureVisible(selectButtonFinder);
+    await tester.tap(selectButtonFinder);
 
-    // Trigger widget to redraw its frames, this causes the stream builder to get the new data
     await tester.pump(Duration.zero);
 
-    final titleFinder = _getTitleFinder("Mercedes-Benz 2017");
-    final buttonFinder2 = _getSelectButtonFinder();
-
-    expect(titleFinder, findsNWidgets(2));
-    expect(buttonFinder2, findsOneWidget);
+    final deselectButtonFinder = find.text("DESELECT");
+    await tester.ensureVisible(deselectButtonFinder);
+    expect(deselectButtonFinder, findsOneWidget);
   });
-}
 
-Finder _getSelectButtonFinder() {
-  return find.text(SELECT_BUTTON);
-}
+  testWidgets('Selecting Car Updates the Widget', (WidgetTester tester) async {
+    ListBloc().injectDataProviderForTest(TestNewDataProvider());
+    await ListBloc().loadItems();
 
-Finder _getRemoveButtonFinder() {
-  return find.text(REMOVE_BUTTON);
-}
+    CarsList cars = await TestNewDataProvider().loadCars();
+    cars.items.sort(ListBloc().alphabetiseItemsByTitleIgnoreCases);
 
-Finder _getTitleFinder(String title) {
-  return find.text(title);
-}
+    await tester.pumpWidget(DetailsPageSelectedWrapper(cars.items.first.id));
+    await tester.pump(Duration.zero);
 
-Finder _getSelectedTitleFinder(String title) {
-  return find.text(getSelectedTitle(title));
+    final selectButtonFinder = find.text("SELECT");
+    await tester.ensureVisible(selectButtonFinder);
+    await tester.tap(selectButtonFinder);
+
+    await tester.pump(Duration.zero);
+
+    final deselectButtonFinder = find.text("DESELECT");
+    await tester.ensureVisible(deselectButtonFinder);
+    await tester.tap(deselectButtonFinder);
+
+    await tester.pump(Duration.zero);
+
+    final newSelectButtonFinder = find.text("SELECT");
+    await tester.ensureVisible(newSelectButtonFinder);
+    expect(newSelectButtonFinder, findsOneWidget);
+  });
 }
 
 class DetailsPageUnselectedWrapper extends StatelessWidget {
