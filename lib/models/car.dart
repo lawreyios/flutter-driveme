@@ -1,3 +1,5 @@
+import 'package:driveme/constants.dart';
+
 class Car {
   final int id;
   final String title;
@@ -12,13 +14,13 @@ class Car {
 
   factory Car.fromJson(Map<String, dynamic> json) {
     return Car(
-        json['id'] as int,
-        json['title'] as String,
-        json['description'] as String,
-        json['url'] as String,
-        json['pricePerDay'] as double,
+        json[CARS_ID_KEY] as int,
+        json[CARS_TITLE_KEY] as String,
+        json[CARS_DESCRIPTION_KEY] as String,
+        json[CARS_URL_KEY] as String,
+        json[CARS_PRICEPERDAY_KEY] as double,
         false,
-        json['features']);
+        json[CARS_FEATURES_KEY]);
   }
 }
 

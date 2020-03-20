@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:driveme/details/details_page.dart';
 import 'package:driveme/models/car.dart';
 import 'package:driveme/list/list_bloc.dart';
-import 'package:driveme/strings.dart';
+import 'package:driveme/constants.dart';
 
 class ListPage extends StatefulWidget {
   ListPage({Key key}) : super(key: key);
@@ -40,7 +40,7 @@ class _ListPageState extends State<ListPage> {
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
-                  key: Key('car_list'),
+                  key: Key(CARS_LIST_KEY),
                   children: snapshot.data.items.map((Car value) {
                     return _buildListRow(value);
                   }).toList(),
@@ -54,12 +54,12 @@ class _ListPageState extends State<ListPage> {
   Widget _displayErrorMessage(String errorMessage) {
     return Container(
         padding: EdgeInsets.all(16.0),
-        child: Center(child: Text('Error: $errorMessage')));
+        child: Center(child: Text(ERROR_MESSAGE.replaceFirst(WILD_STRING, errorMessage))));
   }
 
-  Widget _buildListRow(Car item) {
+  Widget _buildListRow(Car car) {
     return Container(
-        color: item.selected ? Colors.green.shade200 : Colors.white,
+        color: car.selected ? Colors.green.shade200 : Colors.white,
         child: Card(
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(8.0))),
@@ -71,15 +71,15 @@ class _ListPageState extends State<ListPage> {
                     borderRadius: BorderRadius.all(
                       Radius.circular(8.0),
                     ),
-                    child: (item.url == null || item.url.isEmpty)
-                        ? Image.asset('assets/placeholder.png',
+                    child: (car.url == null || car.url.isEmpty)
+                        ? Image.asset(PLACEHOLDER_IMAGE_FILEPATH,
                             height: 150, fit: BoxFit.cover)
-                        : Image.network(item.url,
+                        : Image.network(car.url,
                             height: 150, fit: BoxFit.cover)),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    item.title,
+                    car.title,
                     textAlign: TextAlign.center,
                     style:
                         TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
@@ -88,9 +88,10 @@ class _ListPageState extends State<ListPage> {
               ],
             ),
             subtitle: Padding(
-              padding: const EdgeInsets.all(4.0),
+              padding: const EdgeInsets.all(8.0),
               child: Text(
-                "${item.pricePerDay}/day",
+                PRICE_PER_DAY_TEXT.replaceFirst(
+                    WILD_STRING, car.pricePerDay.toStringAsFixed(2)),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
@@ -99,16 +100,16 @@ class _ListPageState extends State<ListPage> {
               ),
             ),
             onTap: () {
-              _displayDetails(item);
+              _displayDetails(car);
             },
           ),
         ));
   }
 
-  void _displayDetails(Car item) async {
+  void _displayDetails(Car car) async {
     await Navigator.of(context).push(new MaterialPageRoute<Null>(
       builder: (BuildContext context) {
-        return DetailsPage(id: item.id);
+        return DetailsPage(id: car.id);
       },
     ));
   }

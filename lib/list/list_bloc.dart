@@ -1,19 +1,19 @@
 import 'dart:async';
 
 import 'package:rxdart/rxdart.dart';
-import 'package:driveme/database/car_database.dart';
+import 'package:driveme/database/cars_database.dart';
 import 'package:driveme/models/car.dart';
 
 class ListBloc {
-  static final ListBloc _singleton = new ListBloc._internal();
+  static final ListBloc _instance = new ListBloc._internal();
 
   factory ListBloc() {
-    return _singleton;
+    return _instance;
   }
 
   ListBloc._internal();
 
-  CarsDataProvider provider = CarDatabase();
+  CarsDataProvider provider = CarsDatabase();
 
   BehaviorSubject<CarsList> _itemsController = BehaviorSubject<CarsList>();
   Stream<CarsList> get outCars => _itemsController.stream;

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:driveme/details/details_bloc.dart';
 import 'package:driveme/list/list_bloc.dart';
 import 'package:driveme/models/car.dart';
-import 'package:driveme/strings.dart';
+import 'package:driveme/constants.dart';
 
 class DetailsPage extends StatefulWidget {
   DetailsPage({Key key, this.id}) : super(key: key);
@@ -37,7 +37,7 @@ class _DetailsPageState extends State<DetailsPage> {
         ),
       ),
       body: StreamBuilder<Car>(
-        key: Key("car_details"),
+        key: Key(CAR_DETAILS_KEY),
         stream: DetailsBloc().outItem,
         initialData: null,
         builder: (BuildContext context, AsyncSnapshot<Car> snapshot) {          
@@ -77,13 +77,13 @@ class _DetailsPageState extends State<DetailsPage> {
                 Radius.circular(8.0),
               ),
               child: (item.url == null || item.url.isEmpty)
-                  ? Image.asset('assets/placeholder.png', height: 150, fit: BoxFit.cover)
+                  ? Image.asset(PLACEHOLDER_IMAGE_FILEPATH, height: 150, fit: BoxFit.cover)
                   : Image.network(item.url, height: 150, fit: BoxFit.cover)),
           SizedBox(
             height: 11.0,
           ),
           Text(
-            item.selected ? getSelectedTitle(item.title) : "NOT SELECTED",
+            item.selected ? SELECTED_TITLE : NOT_SELECTED_TITLE,
             textAlign: TextAlign.center,
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
@@ -95,7 +95,7 @@ class _DetailsPageState extends State<DetailsPage> {
             height: 33.0,
           ),
           Text(
-            "Features",
+            FEATURES_TITLE,
             textAlign: TextAlign.left,
             style: TextStyle(fontWeight: FontWeight.bold),
           ),

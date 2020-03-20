@@ -1,11 +1,10 @@
-import 'package:driveme/strings.dart';
+import 'package:driveme/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:driveme/details/details_bloc.dart';
 import 'package:driveme/list/list_bloc.dart';
 import 'package:driveme/list/list_page.dart';
 
 void main() => runApp(MyApp());
-
 
 class MyApp extends StatefulWidget {
   MyApp({Key key}) : super(key: key);
@@ -27,7 +26,6 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-
   @override
   void dispose() {
     ListBloc().dispose();
@@ -35,4 +33,3 @@ class _MyAppState extends State<MyApp> {
     super.dispose();
   }
 }
-

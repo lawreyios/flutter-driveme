@@ -5,10 +5,10 @@ import 'package:driveme/list/list_bloc.dart';
 
 class DetailsBloc {
 
-  static final DetailsBloc _singleton = new DetailsBloc._internal();
+  static final DetailsBloc _instance = new DetailsBloc._internal();
 
   factory DetailsBloc() {
-    return _singleton;
+    return _instance;
   }
 
   DetailsBloc._internal();

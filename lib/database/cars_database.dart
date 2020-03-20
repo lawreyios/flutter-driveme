@@ -3,21 +3,22 @@ import 'dart:convert';
 import 'package:driveme/models/car.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:driveme/list/list_bloc.dart';
+import 'package:driveme/constants.dart';
 
-class CarDatabase implements CarsDataProvider {
+class CarsDatabase implements CarsDataProvider {
 
-  static final CarDatabase _singleton = new CarDatabase._internal();
+  static final CarsDatabase _instance = new CarsDatabase._internal();
 
-  factory CarDatabase() {
-    return _singleton;
+  factory CarsDatabase() {
+    return _instance;
   }
 
-  CarDatabase._internal();
+  CarsDatabase._internal();
 
   @override
   Future<CarsList> loadCars() async {
     try {
-      final parsed = List<dynamic>.from(json.decode(await rootBundle.loadString('assets/data.json'))['cars']);
+      final parsed = List<dynamic>.from(json.decode(await rootBundle.loadString(DATA_JSON_FILEPATH))[CARS_KEY]);
       final list = parsed.map((json) => Car.fromJson(json)).toList();
       return CarsList(list, null);
     } catch (exception) {
