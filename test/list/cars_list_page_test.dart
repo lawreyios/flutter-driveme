@@ -1,24 +1,27 @@
+import 'package:driveme/dependency_injector.dart';
 import 'package:driveme/models/car.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:driveme/list/list_bloc.dart';
-import 'package:driveme/list/list_page.dart';
+import 'package:driveme/list/cars_list_bloc.dart';
+import 'package:driveme/list/cars_list_page.dart';
 import 'package:driveme/constants.dart';
 
 import '../database/mock_car_data_provider.dart';
 import '../database/mock_car_data_provider_error.dart';
 
 void main() {
+  setupLocator();
+  var carsListBloc = locator<CarsListBloc>();
+
   testWidgets(
       "Cars are displayed with summary details, and selected car is highlighted green.",
       (WidgetTester tester) async {
     // TODO 18: Inject and Load Mock Car Data
-    final listBloc = ListBloc();
-    listBloc.injectDataProviderForTest(MockCarDataProvider());
+    carsListBloc.injectDataProviderForTest(MockCarDataProvider());
 
     // TODO 19: Load & Sort Mock Data for Verification
     CarsList cars = await MockCarDataProvider().loadCars();
-    cars.items.sort(listBloc.alphabetiseItemsByTitleIgnoreCases);
+    cars.items.sort(carsListBloc.alphabetiseItemsByTitleIgnoreCases);
 
     // TODO 20: Load and render Widget
     await tester.pumpWidget(ListPageWrapper());
@@ -32,15 +35,13 @@ void main() {
     _verifyAllCarDetails(cars.items, tester);
 
     // TODO 24: Select a Car
-    listBloc.selectItem(1);
+    carsListBloc.selectItem(1);
 
     // TODO 25: Verify that Car is highlighted in green
     WidgetPredicate widgetSelectedPredicate = (Widget widget) =>
-        widget is Container &&
-        widget.decoration == BoxDecoration(color: Colors.green.shade200);
-    WidgetPredicate widgetUnselectedPredicate = (Widget widget) =>
-        widget is Container &&
-        widget.decoration == BoxDecoration(color: Colors.white);
+        widget is Card && widget.color == Colors.blue.shade200;
+    WidgetPredicate widgetUnselectedPredicate =
+        (Widget widget) => widget is Card && widget.color == Colors.white;
 
     expect(find.byWidgetPredicate(widgetSelectedPredicate), findsOneWidget);
     expect(find.byWidgetPredicate(widgetUnselectedPredicate), findsNWidgets(5));
@@ -49,7 +50,7 @@ void main() {
   testWidgets('Proper error message is shown when an error occured',
       (WidgetTester tester) async {
     // TODO 26: Inject and Load Error Mock Car Data
-    ListBloc().injectDataProviderForTest(MockCarDataProviderError());
+    carsListBloc.injectDataProviderForTest(MockCarDataProviderError());
 
     // TODO 27: Load and render Widget
     await tester.pumpWidget(ListPageWrapper());
@@ -65,7 +66,7 @@ void main() {
       'After encountering an error, and stream is updated, Widget is also updated.',
       (WidgetTester tester) async {
     // TODO 29: Inject and Load Error Mock Car Data
-    ListBloc().injectDataProviderForTest(MockCarDataProviderError());
+    carsListBloc.injectDataProviderForTest(MockCarDataProviderError());
 
     // TODO 30: Load and render Widget
     await tester.pumpWidget(ListPageWrapper());
@@ -77,8 +78,8 @@ void main() {
     expect(errorFinder, findsOneWidget);
 
     // TODO 32: Inject and Load Mock Car Data
-    ListBloc().injectDataProviderForTest(MockCarDataProvider());
-    await ListBloc().loadItems();
+    carsListBloc.injectDataProviderForTest(MockCarDataProvider());
+    await carsListBloc.loadItems();
 
     // TODO 33: Reload Widget
     await tester.pump(Duration.zero);

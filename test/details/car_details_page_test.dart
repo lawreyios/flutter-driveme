@@ -1,24 +1,29 @@
 import 'package:driveme/constants.dart';
+import 'package:driveme/dependency_injector.dart';
 import 'package:driveme/models/car.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:driveme/details/details_page.dart';
-import 'package:driveme/list/list_bloc.dart';
+import 'package:driveme/details/car_details_page.dart';
+import 'package:driveme/list/cars_list_bloc.dart';
 
 import '../database/mock_car_data_provider.dart';
 
 CarsList cars;
 
 void main() {
+
+  setupLocator();
+  var carsListBloc = locator<CarsListBloc>();
+
   testWidgets('Unselected Car Details Page should be shown as Unselected',
       (WidgetTester tester) async {
     // TODO 35: Inject and Load Mock Car Data
-    ListBloc().injectDataProviderForTest(MockCarDataProvider());
-    await ListBloc().loadItems();
+    carsListBloc.injectDataProviderForTest(MockCarDataProvider());
+    await carsListBloc.loadItems();
 
     // TODO 36: Load & Sort Mock Data for Verification
     CarsList cars = await MockCarDataProvider().loadCars();
-    cars.items.sort(ListBloc().alphabetiseItemsByTitleIgnoreCases);
+    cars.items.sort(carsListBloc.alphabetiseItemsByTitleIgnoreCases);
 
     // TODO 37: Load and render Widget
     await tester.pumpWidget(DetailsPageSelectedWrapper(cars.items.first.id));
@@ -57,8 +62,8 @@ void main() {
   testWidgets('Selected Car Details Page should be shown as Selected',
       (WidgetTester tester) async {
     // TODO 39: Inject and Load Mock Car Data
-    ListBloc().injectDataProviderForTest(MockCarDataProvider());
-    await ListBloc().loadItems();
+    carsListBloc.injectDataProviderForTest(MockCarDataProvider());
+    await carsListBloc.loadItems();
 
     // TODO 40: Load and render Widget
     await tester.pumpWidget(DetailsPageSelectedWrapper(1));
@@ -100,12 +105,12 @@ void main() {
 
   testWidgets('Selecting Car Updates the Widget', (WidgetTester tester) async {
     // TODO 43: Inject and Load Mock Car Data
-    ListBloc().injectDataProviderForTest(MockCarDataProvider());
-    await ListBloc().loadItems();
+    carsListBloc.injectDataProviderForTest(MockCarDataProvider());
+    await carsListBloc.loadItems();
 
     // TODO 44: Load & Sort Mock Data for Verification
     CarsList cars = await MockCarDataProvider().loadCars();
-    cars.items.sort(ListBloc().alphabetiseItemsByTitleIgnoreCases);
+    cars.items.sort(carsListBloc.alphabetiseItemsByTitleIgnoreCases);
 
     // TODO 45: Load and render Widget
     await tester.pumpWidget(DetailsPageSelectedWrapper(cars.items.first.id));
@@ -127,12 +132,12 @@ void main() {
 
   testWidgets('Selecting Car Updates the Widget', (WidgetTester tester) async {
     // TODO 49: Inject and Load Mock Car Data
-    ListBloc().injectDataProviderForTest(MockCarDataProvider());
-    await ListBloc().loadItems();
+    carsListBloc.injectDataProviderForTest(MockCarDataProvider());
+    await carsListBloc.loadItems();
 
     // TODO 50: Load & Sort Mock Data for Verification
     CarsList cars = await MockCarDataProvider().loadCars();
-    cars.items.sort(ListBloc().alphabetiseItemsByTitleIgnoreCases);
+    cars.items.sort(carsListBloc.alphabetiseItemsByTitleIgnoreCases);
 
     // TODO 51: Load and render Widget for the first car
     await tester.pumpWidget(DetailsPageSelectedWrapper(cars.items.first.id));
@@ -165,7 +170,7 @@ class DetailsPageSelectedWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: DetailsPage(id: id),
+      home: CarDetailsPage(id: id),
     );
   }
 }

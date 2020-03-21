@@ -1,31 +1,35 @@
+import 'package:driveme/dependency_injector.dart';
 import 'package:flutter/material.dart';
-import 'package:driveme/details/details_bloc.dart';
-import 'package:driveme/list/list_bloc.dart';
+import 'package:driveme/details/car_details_bloc.dart';
+import 'package:driveme/list/cars_list_bloc.dart';
 import 'package:driveme/models/car.dart';
 import 'package:driveme/constants.dart';
 
-class DetailsPage extends StatefulWidget {
-  DetailsPage({Key key, this.id}) : super(key: key);
+class CarDetailsPage extends StatefulWidget {
+  CarDetailsPage({Key key, this.id}) : super(key: key);
 
   final int id;
 
   @override
-  _DetailsPageState createState() => _DetailsPageState();
+  _CarDetailsPageState createState() => _CarDetailsPageState();
 }
 
-class _DetailsPageState extends State<DetailsPage> {
+class _CarDetailsPageState extends State<CarDetailsPage> {
+  var carsDetailsBloc = locator<CarDetailsBloc>();
+  var carsListBloc = locator<CarsListBloc>();
+
   @override
   void initState() {
     super.initState();
-    DetailsBloc().getItem(widget.id);
+    carsDetailsBloc.getItem(widget.id);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: StreamBuilder<Car>(          
-          stream: DetailsBloc().outItem,
+        title: StreamBuilder<Car>(
+          stream: carsDetailsBloc.outItem,
           initialData: null,
           builder: (BuildContext context, AsyncSnapshot<Car> snapshot) {
             if (snapshot.data == null) {
@@ -38,9 +42,9 @@ class _DetailsPageState extends State<DetailsPage> {
       ),
       body: StreamBuilder<Car>(
         key: Key(CAR_DETAILS_KEY),
-        stream: DetailsBloc().outItem,
+        stream: carsDetailsBloc.outItem,
         initialData: null,
-        builder: (BuildContext context, AsyncSnapshot<Car> snapshot) {          
+        builder: (BuildContext context, AsyncSnapshot<Car> snapshot) {
           if (snapshot.data == null) {
             return Center(child: CircularProgressIndicator());
           } else {
@@ -63,10 +67,10 @@ class _DetailsPageState extends State<DetailsPage> {
     Widget button = item.selected
         ? RaisedButton(
             child: Text(REMOVE_BUTTON),
-            onPressed: () => ListBloc().deselectItem(widget.id))
+            onPressed: () => carsListBloc.deselectItem(widget.id))
         : RaisedButton(
             child: Text(SELECT_BUTTON),
-            onPressed: () => ListBloc().selectItem(widget.id),
+            onPressed: () => carsListBloc.selectItem(widget.id),
           );
     return Container(
       padding: EdgeInsets.all(24.0),
@@ -77,7 +81,8 @@ class _DetailsPageState extends State<DetailsPage> {
                 Radius.circular(8.0),
               ),
               child: (item.url == null || item.url.isEmpty)
-                  ? Image.asset(PLACEHOLDER_IMAGE_FILEPATH, height: 150, fit: BoxFit.cover)
+                  ? Image.asset(PLACEHOLDER_IMAGE_FILEPATH,
+                      height: 150, fit: BoxFit.cover)
                   : Image.network(item.url, height: 150, fit: BoxFit.cover)),
           SizedBox(
             height: 11.0,
@@ -101,7 +106,7 @@ class _DetailsPageState extends State<DetailsPage> {
           ),
           _buildFeaturesView(item.features),
           SizedBox(
-            height: 44.0,
+            height: 8.0,
           ),
           button
         ],

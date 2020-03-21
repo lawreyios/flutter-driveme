@@ -4,22 +4,14 @@ import 'package:rxdart/rxdart.dart';
 import 'package:driveme/database/cars_database.dart';
 import 'package:driveme/models/car.dart';
 
-class ListBloc {
-  static final ListBloc _instance = new ListBloc._internal();
-
-  factory ListBloc() {
-    return _instance;
-  }
-
-  ListBloc._internal();
-
+class CarsListBloc {
   CarsDataProvider provider = CarsDatabase();
 
   BehaviorSubject<CarsList> _itemsController = BehaviorSubject<CarsList>();
   Stream<CarsList> get outCars => _itemsController.stream;
 
   Future loadItems() async {
-    CarsList items = await provider.loadCars();    
+    CarsList items = await provider.loadCars();
     if (items.items != null) {
       items.items.sort(alphabetiseItemsByTitleIgnoreCases);
     }
@@ -32,14 +24,20 @@ class ListBloc {
 
   void selectItem(int id) {
     StreamSubscription subscription;
-    subscription = ListBloc().outCars.listen((listOfCars) async {
+    subscription = outCars.listen((carsList) async {
       List<Car> newList = List<Car>();
-      for (var item in listOfCars.items) {
-        if (item.id == id) {
-          newList.add(Car(item.id, item.title, item.description, item.url,
-              item.pricePerDay, true, item.features));
+      for (var car in carsList.items) {
+        if (car.id == id) {
+          newList.add(Car(
+              id: car.id,
+              title: car.title,
+              description: car.description,
+              url: car.url,
+              pricePerDay: car.pricePerDay,
+              selected: true,
+              features: car.features));
         } else {
-          newList.add(item);
+          newList.add(car);
         }
       }
       _itemsController.sink.add(CarsList(newList, null));
@@ -49,14 +47,20 @@ class ListBloc {
 
   void deselectItem(int id) {
     StreamSubscription subscription;
-    subscription = ListBloc().outCars.listen((listOfItems) async {
+    subscription = outCars.listen((carsList) async {
       List<Car> newList = List<Car>();
-      for (var item in listOfItems.items) {
-        if (item.id == id) {
-          newList.add(Car(item.id, item.title, item.description, item.url,
-              item.pricePerDay, false, item.features));
+      for (var car in carsList.items) {
+        if (car.id == id) {
+          newList.add(Car(
+              id: car.id,
+              title: car.title,
+              description: car.description,
+              url: car.url,
+              pricePerDay: car.pricePerDay,
+              selected: false,
+              features: car.features));
         } else {
-          newList.add(item);
+          newList.add(car);
         }
       }
       _itemsController.sink.add(CarsList(newList, null));

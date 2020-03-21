@@ -1,7 +1,8 @@
+import 'package:driveme/dependency_injector.dart';
 import 'package:flutter/material.dart';
-import 'package:driveme/details/details_page.dart';
+import 'package:driveme/details/car_details_page.dart';
 import 'package:driveme/models/car.dart';
-import 'package:driveme/list/list_bloc.dart';
+import 'package:driveme/list/cars_list_bloc.dart';
 import 'package:driveme/constants.dart';
 
 class ListPage extends StatefulWidget {
@@ -12,10 +13,12 @@ class ListPage extends StatefulWidget {
 }
 
 class _ListPageState extends State<ListPage> {
+  var listBloc = locator<CarsListBloc>();
+
   @override
   void initState() {
     super.initState();
-    ListBloc().loadItems();
+    listBloc.loadItems();
   }
 
   @override
@@ -25,7 +28,7 @@ class _ListPageState extends State<ListPage> {
           title: Text(LIST_PAGE_TITLE),
         ),
         body: StreamBuilder<CarsList>(
-          stream: ListBloc().outCars,
+          stream: listBloc.outCars,
           initialData: null,
           builder: (BuildContext context, AsyncSnapshot<CarsList> snapshot) {
             if (snapshot.hasError) {
@@ -39,8 +42,8 @@ class _ListPageState extends State<ListPage> {
                 child: ListView(
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
                   key: Key(CARS_LIST_KEY),
+                  physics: NeverScrollableScrollPhysics(),
                   children: snapshot.data.items.map((Car value) {
                     return _buildListRow(value);
                   }).toList(),
@@ -54,13 +57,15 @@ class _ListPageState extends State<ListPage> {
   Widget _displayErrorMessage(String errorMessage) {
     return Container(
         padding: EdgeInsets.all(16.0),
-        child: Center(child: Text(ERROR_MESSAGE.replaceFirst(WILD_STRING, errorMessage))));
+        child: Center(
+            child:
+                Text(ERROR_MESSAGE.replaceFirst(WILD_STRING, errorMessage))));
   }
 
   Widget _buildListRow(Car car) {
-    return Container(
-        color: car.selected ? Colors.green.shade200 : Colors.white,
+    return Container(        
         child: Card(
+          color: car.selected ? Colors.blue.shade200 : Colors.white,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(8.0))),
           child: ListTile(
@@ -109,7 +114,7 @@ class _ListPageState extends State<ListPage> {
   void _displayDetails(Car car) async {
     await Navigator.of(context).push(new MaterialPageRoute<Null>(
       builder: (BuildContext context) {
-        return DetailsPage(id: car.id);
+        return CarDetailsPage(id: car.id);
       },
     ));
   }

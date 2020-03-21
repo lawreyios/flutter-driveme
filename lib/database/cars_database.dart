@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:driveme/models/car.dart';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:driveme/list/list_bloc.dart';
+import 'package:driveme/list/cars_list_bloc.dart';
 import 'package:driveme/constants.dart';
 
 class CarsDatabase implements CarsDataProvider {

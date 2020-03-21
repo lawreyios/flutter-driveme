@@ -1,17 +1,11 @@
 import 'dart:async';
+import 'package:driveme/dependency_injector.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:driveme/models/car.dart';
-import 'package:driveme/list/list_bloc.dart';
+import 'package:driveme/list/cars_list_bloc.dart';
 
-class DetailsBloc {
-
-  static final DetailsBloc _instance = new DetailsBloc._internal();
-
-  factory DetailsBloc() {
-    return _instance;
-  }
-
-  DetailsBloc._internal();
+class CarDetailsBloc {
+  var carsListBloc = locator<CarsListBloc>();
 
   BehaviorSubject<Car> _itemController = BehaviorSubject<Car>();
   Stream<Car> get outItem => _itemController.stream;
@@ -26,8 +20,8 @@ class DetailsBloc {
       _subscription.cancel();
     }
 
-    _subscription = ListBloc().outCars.listen((listOfItems) async {
-      for (var item in listOfItems.items){
+    _subscription = carsListBloc.outCars.listen((listOfItems) async {
+      for (var item in listOfItems.items) {
         if (item.id == _currentId) {
           _itemController.sink.add(item);
           break;
@@ -42,5 +36,4 @@ class DetailsBloc {
     }
     _itemController.close();
   }
-
 }

@@ -9,18 +9,24 @@ class Car {
   bool selected;
   final List<dynamic> features;
 
-  Car(this.id, this.title, this.description, this.url, this.pricePerDay,
-      this.selected, this.features);
+  Car(
+      {this.id,
+      this.title,
+      this.description,
+      this.url,
+      this.pricePerDay,
+      this.selected,
+      this.features});
 
   factory Car.fromJson(Map<String, dynamic> json) {
     return Car(
-        json[CARS_ID_KEY] as int,
-        json[CARS_TITLE_KEY] as String,
-        json[CARS_DESCRIPTION_KEY] as String,
-        json[CARS_URL_KEY] as String,
-        json[CARS_PRICEPERDAY_KEY] as double,
-        false,
-        json[CARS_FEATURES_KEY]);
+        id: json[CARS_ID_KEY],
+        title: json[CARS_TITLE_KEY],
+        description: json[CARS_DESCRIPTION_KEY],
+        url: json[CARS_URL_KEY],
+        pricePerDay: json[CARS_PRICEPERDAY_KEY],
+        selected: false,
+        features: json[CARS_FEATURES_KEY]);
   }
 }
 
