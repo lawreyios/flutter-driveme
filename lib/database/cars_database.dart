@@ -7,14 +7,6 @@ import 'package:driveme/constants.dart';
 
 class CarsDatabase implements CarsDataProvider {
 
-  static final CarsDatabase _instance = new CarsDatabase._internal();
-
-  factory CarsDatabase() {
-    return _instance;
-  }
-
-  CarsDatabase._internal();
-
   @override
   Future<CarsList> loadCars() async {
     try {

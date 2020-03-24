@@ -1,11 +1,11 @@
 import 'dart:async';
 
+import 'package:driveme/dependency_injector.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:driveme/database/cars_database.dart';
 import 'package:driveme/models/car.dart';
 
 class CarsListBloc {
-  CarsDataProvider provider = CarsDatabase();
+  CarsDataProvider provider = locator<CarsDataProvider>();
 
   BehaviorSubject<CarsList> _itemsController = BehaviorSubject<CarsList>();
   Stream<CarsList> get outCars => _itemsController.stream;
