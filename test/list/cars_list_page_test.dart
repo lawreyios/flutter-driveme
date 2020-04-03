@@ -35,7 +35,7 @@ void main() {
     _verifyAllCarDetails(cars.items, tester);
 
     // TODO 24: Select a Car
-    carsListBloc.selectItem(1);
+    carsListBloc.selectItem(1); // Selects Hyundai Sonata 2017
 
     // TODO 25: Verify that Car is highlighted in green
     WidgetPredicate widgetSelectedPredicate = (Widget widget) =>

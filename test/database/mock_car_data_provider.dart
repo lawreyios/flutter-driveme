@@ -15,7 +15,7 @@ class MockCarDataProvider implements CarsDataProvider {
             "This little 4 doors Toyota provide spacious that fit 5 people with decent trunk space. It is very eco-friendly with great gas mileage. It can easily park in the busy street in Los Angeles.",
         url: "",
         pricePerDay: 75.00,
-        selected: true,
+        selected: false,
         features: [
           "Remote Keyless Entry",
           "Anti-Lock Brakes (ABS)",
@@ -26,7 +26,7 @@ class MockCarDataProvider implements CarsDataProvider {
         id: 2,
         title: "Mercedes-Benz 2017",
         description:
-            "Fully loaded black on black.  On top of the standard options includes: Nappa Leather Interior, Heads Up Display, 20\" AMG Multispoke wheels, Premium 1 Package (Ventilated seats, keyless go, parktronic, active multicontour seats with massage, rapid heating seats), Sport Package: (AMG Wheels and body, stainless steel sport pedals), Warmth and Comfort Package: (Heated steering wheel, power adjustable rear seats, heated front and rear armrests), Surround View system, Driver Assistance Package: (Distronic Plus with steering assist, active blind sport assist, active lane keeping assist, pre-safe brake, BAS Plus).",
+            "Fully loaded black on black.  On top of the standard options includes: Nappa Leather Interior, Heads Up Display, 20\" AMG Multispoke wheels, Premium 1 Package (Ventilated seats, keyless go, parktronic, active multicontour seats with massage, rapid heating seats)",
         url: "",
         pricePerDay: 175.00,
         selected: false,
@@ -43,7 +43,7 @@ class MockCarDataProvider implements CarsDataProvider {
             "Great on ⛽️, Roomy and comfortable for long distance trips , AUX and USB input.",
         url: "",
         pricePerDay: 275.00,
-        selected: false,
+        selected: true,
         features: [
           "Remote Keyless Entry",
           "Anti-Lock Brakes (ABS)",
