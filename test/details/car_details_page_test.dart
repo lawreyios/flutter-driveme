@@ -15,7 +15,7 @@ void main() {
   setupLocator();
   var carsListBloc = locator<CarsListBloc>();
 
-  testWidgets('Unselected Car Details Page should be shown as Unselected', (WidgetTester tester) async {
+  // testWidgets('Unselected Car Details Page should be shown as Unselected', (WidgetTester tester) async {
     // TODO 35: Inject and Load Mock Car Data
 
     // TODO 36: Load & Sort Mock Data for Verification
@@ -24,10 +24,10 @@ void main() {
 
     // TODO 38: Verify Car Details
 
-  });
+  // });
 
-  testWidgets('Selected Car Details Page should be shown as Selected',
-      (WidgetTester tester) async {
+  // testWidgets('Selected Car Details Page should be shown as Selected',
+  //     (WidgetTester tester) async {
     // TODO 39: Inject and Load Mock Car Data
 
     // TODO 40: Load and render Widget
@@ -36,9 +36,9 @@ void main() {
 
     // TODO 42: First Car is Selected, so Verify that
 
-  });
+  // });
 
-  testWidgets('Selecting Car Updates the Widget', (WidgetTester tester) async {
+  // testWidgets('Selecting Car Updates the Widget', (WidgetTester tester) async {
     // TODO 43: Inject and Load Mock Car Data
 
     // TODO 44: Load & Sort Mock Data for Verification
@@ -47,7 +47,7 @@ void main() {
 
     // TODO 46: Tap on Select and Deselect to ensure widget updates
 
-  });
+  // });
 }
 
 class DetailsPageSelectedWrapper extends StatelessWidget {
