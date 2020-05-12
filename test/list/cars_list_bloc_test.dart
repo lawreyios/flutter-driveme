@@ -9,7 +9,7 @@ void main() {
   setupLocator();
   var carsListBloc = locator<CarsListBloc>();
 
-  test('List of Cars is well sorted in alphabectical order', () async {
+  test('List of Cars is well sorted in alphabetical order', () async {
     // TODO 3: Inject and Load Mock Car Data
     carsListBloc.injectDataProviderForTest(MockCarDataProvider());
     carsListBloc.loadItems();
@@ -38,7 +38,7 @@ void main() {
       expect(actualPricePerDay, equals(expectedPricePerDay));
 
       final actualSelection = carsList.elementAt(i).selected;
-      final expectedSelection = i == 0 ? true : false; // Hyundai Sonata 2017 is selected
+      final expectedSelection = i == 0; // Hyundai Sonata 2017 is selected
       expect(actualSelection, expectedSelection);
 
       final actualFeatures = carsList.elementAt(i).features;

@@ -14,7 +14,7 @@ void main() {
   var carsListBloc = locator<CarsListBloc>();
 
   testWidgets(
-      "Cars are displayed with summary details, and selected car is highlighted green.",
+      "Cars are displayed with summary details, and selected car is highlighted in blue.",
       (WidgetTester tester) async {
     // TODO 18: Inject and Load Mock Car Data
     carsListBloc.injectDataProviderForTest(MockCarDataProvider());
@@ -37,7 +37,7 @@ void main() {
     // TODO 24: Select a Car
     carsListBloc.selectItem(1); // Selects Hyundai Sonata 2017
 
-    // TODO 25: Verify that Car is highlighted in green
+    // TODO 25: Verify that Car is highlighted in blue
     WidgetPredicate widgetSelectedPredicate = (Widget widget) =>
         widget is Card && widget.color == Colors.blue.shade200;
     WidgetPredicate widgetUnselectedPredicate =
@@ -47,7 +47,7 @@ void main() {
     expect(find.byWidgetPredicate(widgetUnselectedPredicate), findsNWidgets(5));
   });
 
-  testWidgets('Proper error message is shown when an error occured',
+  testWidgets('Proper error message is shown when an error occurred',
       (WidgetTester tester) async {
     // TODO 26: Inject and Load Error Mock Car Data
     carsListBloc.injectDataProviderForTest(MockCarDataProviderError());
@@ -72,14 +72,16 @@ void main() {
     await tester.pumpWidget(ListPageWrapper());
     await tester.pump(Duration.zero);
 
-    // TODO 31: Verify that Error Message is shown
+    // TODO 31: Verify that Error Message and Retry Button is shown
     final errorFinder =
         find.text(ERROR_MESSAGE.replaceFirst(WILD_STRING, MOCK_ERROR_MESSAGE));
+    final retryButtonFinder = find.text(RETRY_BUTTON);
     expect(errorFinder, findsOneWidget);
+    expect(retryButtonFinder, findsOneWidget);
 
     // TODO 32: Inject and Load Mock Car Data
     carsListBloc.injectDataProviderForTest(MockCarDataProvider());
-    await carsListBloc.loadItems();
+    await tester.tap(retryButtonFinder);
 
     // TODO 33: Reload Widget
     await tester.pump(Duration.zero);
