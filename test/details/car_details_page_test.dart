@@ -16,19 +16,19 @@ void main() {
   var carsListBloc = locator<CarsListBloc>();
 
   testWidgets('Unselected Car Details Page should be shown as Unselected', (WidgetTester tester) async {
-    // TODO 35: Inject and Load Mock Car Data
+    // TODO 21: Inject and Load Mock Car Data
     carsListBloc.injectDataProviderForTest(MockCarDataProvider());
     await carsListBloc.loadItems();
 
-    // TODO 36: Load & Sort Mock Data for Verification
+    // TODO 22: Load & Sort Mock Data for Verification
     CarsList cars = await MockCarDataProvider().loadCars();
     cars.items.sort(carsListBloc.alphabetiseItemsByTitleIgnoreCases);
 
-    // TODO 37: Load and render Widget
+    // TODO 23: Load and render Widget
     await tester.pumpWidget(DetailsPageSelectedWrapper(2)); // Mercedes-Benz 2017
     await tester.pump(Duration.zero);
 
-    // TODO 38: Verify Car Details
+    // TODO 24: Verify Car Details
     final carDetailsKey = find.byKey(Key(CAR_DETAILS_KEY));
     expect(carDetailsKey, findsOneWidget);
 
@@ -60,19 +60,19 @@ void main() {
 
   testWidgets('Selected Car Details Page should be shown as Selected',
       (WidgetTester tester) async {
-    // TODO 39: Inject and Load Mock Car Data
+    // TODO 25: Inject and Load Mock Car Data
     carsListBloc.injectDataProviderForTest(MockCarDataProvider());
     await carsListBloc.loadItems();
 
-    // TODO 40: Load and render Widget
+    // TODO 26: Load and render Widget
     await tester.pumpWidget(DetailsPageSelectedWrapper(3)); // Hyundai Sonata 2017
     await tester.pump(Duration.zero);
 
-    // TODO 41: Load Mock Data for Verification
+    // TODO 27: Load Mock Data for Verification
     CarsList actualCarsList = await MockCarDataProvider().loadCars();
     List<Car> actualCars = actualCarsList.items;
 
-    // TODO 42: First Car is Selected, so Verify that
+    // TODO 28: First Car is Selected, so Verify that
     final carDetailsKey = find.byKey(Key(CAR_DETAILS_KEY));
     expect(carDetailsKey, findsOneWidget);
 
@@ -103,19 +103,19 @@ void main() {
   });
 
   testWidgets('Selecting Car Updates the Widget', (WidgetTester tester) async {
-    // TODO 43: Inject and Load Mock Car Data
+    // TODO 29: Inject and Load Mock Car Data
     carsListBloc.injectDataProviderForTest(MockCarDataProvider());
     await carsListBloc.loadItems();
 
-    // TODO 44: Load & Sort Mock Data for Verification
+    // TODO 30: Load & Sort Mock Data for Verification
     CarsList cars = await MockCarDataProvider().loadCars();
     cars.items.sort(carsListBloc.alphabetiseItemsByTitleIgnoreCases);
 
-    // TODO 45: Load and render Widget for the first car
+    // TODO 31: Load and render Widget for the first car
     await tester.pumpWidget(DetailsPageSelectedWrapper(2)); // Mercedes-Benz 2017
     await tester.pump(Duration.zero);
 
-    // TODO 46: Tap on Select and Deselect to ensure widget updates
+    // TODO 32: Tap on Select and Deselect to ensure widget updates
     final selectButtonFinder = find.text(SELECT_BUTTON);
     await tester.ensureVisible(selectButtonFinder);
     await tester.tap(selectButtonFinder);

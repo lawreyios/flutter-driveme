@@ -9,21 +9,18 @@ void main() {
   setupLocator();
   var carsListBloc = locator<CarsListBloc>();
 
+  // TODO 3: Unit Testing Data Loading Logic
   test('List of Cars is well sorted in alphabetical order', () async {
-    // TODO 3: Inject and Load Mock Car Data
     carsListBloc.injectDataProviderForTest(MockCarDataProvider());
     carsListBloc.loadItems();
 
-    // TODO 4: Load Data from Data Stream
     var carsListData = await carsListBloc.outCars.take(1).toList();
     var carsList = carsListData.first.items;
 
-    // TODO 5: Load & Sort Mock Data for Verification
     CarsList databaseCarsData = await MockCarDataProvider().loadCars();
     databaseCarsData.items
         .sort(carsListBloc.alphabetiseItemsByTitleIgnoreCases);
 
-    // TODO 6: Verify Car Data
     for (var i = 0; i < carsList.length; i++) {
       final actualTitle = carsList.elementAt(i).title;
       final expectedTitle = databaseCarsData.items[i].title;
@@ -49,18 +46,14 @@ void main() {
   });
 
   test('Stream is updated when a Car is Selected', () async {
-    // TODO 7: Inject and Load Mock Car Data
     carsListBloc.injectDataProviderForTest(MockCarDataProvider());
     await carsListBloc.loadItems();
 
-    // TODO 8: Select a Car
     carsListBloc.selectItem(2); // Selects Mercedes-Benz 2017
 
-    // TODO 9: Load Data from Second Data Stream
     var carsListData = await carsListBloc.outCars.take(2).toList();
     var carsList = carsListData.last.items;
 
-    // TODO 10: Verify Car is now Selected
     expect(carsList.elementAt(0).selected, true);
     expect(carsList.elementAt(1).selected, true);
     expect(carsList.elementAt(2).selected, false);
@@ -70,18 +63,14 @@ void main() {
   });
 
   test('Stream is updated when a Car is Deselected', () async {
-    // TODO 11: Inject and Load Mock Car Data
     carsListBloc.injectDataProviderForTest(MockCarDataProvider());
     await carsListBloc.loadItems();
 
-    // TODO 12: Select a Car
     carsListBloc.selectItem(2); // Selects Mercedes-Benz 2017
 
-    // TODO 13: Load Data from Second Data Stream
     var carsListData = await carsListBloc.outCars.take(2).toList();
     var carsList = carsListData.last.items;
 
-    // TODO 14: Verify that Car is deselected
     expect(carsList.elementAt(0).selected, true);
     expect(carsList.elementAt(1).selected, true);
     expect(carsList.elementAt(2).selected, false);
@@ -89,14 +78,11 @@ void main() {
     expect(carsList.elementAt(4).selected, false);
     expect(carsList.elementAt(5).selected, false);
 
-    // TODO 15: Deselect a Car
     carsListBloc.deselectItem(2); // Deselects Mercedes-Benz 2017
 
-    // TODO 16: Load Data from Second Data Stream again
     carsListData = await carsListBloc.outCars.take(2).toList();
     carsList = carsListData.last.items;
 
-    // TODO 17: Verify that Car is now deselected
     expect(carsList.elementAt(0).selected, true);
     expect(carsList.elementAt(1).selected, false);
     expect(carsList.elementAt(2).selected, false);
