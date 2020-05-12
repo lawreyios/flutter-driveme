@@ -5,6 +5,7 @@ const String SELECTED_TITLE = 'SELECTED';
 const String NOT_SELECTED_TITLE = 'NOT SELECTED';
 const String LIST_PAGE_TITLE = 'Cars';
 const String FEATURES_TITLE = 'Features';
+const String RETRY_BUTTON = 'Retry';
 
 const String WILD_STRING = '%@';
 const String PRICE_PER_DAY_TEXT = '\$%@/day';

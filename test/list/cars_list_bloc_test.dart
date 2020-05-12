@@ -9,7 +9,7 @@ void main() {
   setupLocator();
   var carsListBloc = locator<CarsListBloc>();
 
-  // test('List of Cars is well sorted in alphabectical order', () async {
+  test('List of Cars is well sorted in alphabetical order', () async {
     // TODO 3: Inject and Load Mock Car Data
 
     // TODO 4: Load Data from Data Stream
@@ -18,9 +18,9 @@ void main() {
 
     // TODO 6: Verify Car Data
 
-  // });
+  });
 
-  // test('Stream is updated when a Car is Selected', () async {
+  test('Stream is updated when a Car is Selected', () async {
     // TODO 7: Inject and Load Mock Car Data
 
     // TODO 8: Select a Car
@@ -29,9 +29,9 @@ void main() {
 
     // TODO 10: Verify Car is now Selected
 
-  // });
+  });
 
-  // test('Stream is updated when a Car is Deselected', () async {
+  test('Stream is updated when a Car is Deselected', () async {
     // TODO 11: Inject and Load Mock Car Data
 
     // TODO 12: Select a Car
@@ -46,5 +46,5 @@ void main() {
 
     // TODO 17: Verify that Car is now deselected
 
-  // });
+  });
 }
