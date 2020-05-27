@@ -13,9 +13,7 @@ void main() {
   setupLocator();
   var carsListBloc = locator<CarsListBloc>();
 
-  testWidgets(
-      "Cars are displayed with summary details, and selected car is highlighted in blue.",
-      (WidgetTester tester) async {
+  // testWidgets("Cars are displayed with summary details, and selected car is highlighted in blue.", (WidgetTester tester) async {
     // TODO 4: Inject and Load Mock Car Data
 
     // TODO 5: Load & Sort Mock Data for Verification
@@ -29,20 +27,17 @@ void main() {
     // TODO 10: Select a Car
 
     // TODO 11: Verify that Car is highlighted in blue
-  });
+  // });
 
-  testWidgets('Proper error message is shown when an error occurred',
-      (WidgetTester tester) async {
+  // testWidgets('Proper error message is shown when an error occurred', (WidgetTester tester) async {
     // TODO 12: Inject and Load Error Mock Car Data
 
     // TODO 13: Load and render Widget
 
     // TODO 14: Verify that Error Message is shown
-  });
+  // });
 
-  testWidgets(
-      'After encountering an error, and stream is updated, Widget is also updated.',
-      (WidgetTester tester) async {
+  // testWidgets('After encountering an error, and stream is updated, Widget is also updated.', (WidgetTester tester) async {
     // TODO 15: Inject and Load Error Mock Car Data
 
     // TODO 16: Load and render Widget
@@ -54,7 +49,8 @@ void main() {
     // TODO 19: Reload Widget
 
     // TODO 20: Load and Verify Car Data
-  });
+
+  // });
 }
 
 // TODO 8: Create a function to verify list's existence
